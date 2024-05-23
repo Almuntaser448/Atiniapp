@@ -1,49 +1,28 @@
 package com.rassam.atiniapp;
 
 import android.app.Application;
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.config.AWSConfiguration;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class AWSProvider extends Application {
 
-    private static CognitoCachingCredentialsProvider credentialsProvider;
-    private static DynamoDBMapper dynamoDBMapper;
-    private static TransferUtility transferUtility;
+    private static FirebaseFirestore firestore;
+    private static FirebaseStorage storage;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(),
-                "YOUR_IDENTITY_POOL_ID", // Identity Pool ID
-                Regions.YOUR_REGION // Region
-        );
-
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
-        dynamoDBMapper = DynamoDBMapper.builder()
-                .dynamoDBClient(dynamoDBClient)
-                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
-                .build();
-
-        AmazonS3Client s3Client = new AmazonS3Client(credentialsProvider);
-        transferUtility = TransferUtility.builder()
-                .context(getApplicationContext())
-                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
-                .s3Client(s3Client)
-                .build();
+        FirebaseApp.initializeApp(this);
+        firestore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
-    public static DynamoDBMapper getDynamoDBMapper() {
-        return dynamoDBMapper;
+    public static FirebaseFirestore getFirestore() {
+        return firestore;
     }
 
-    public static TransferUtility getTransferUtility() {
-        return transferUtility;
+    public static FirebaseStorage getStorage() {
+        return storage;
     }
 }

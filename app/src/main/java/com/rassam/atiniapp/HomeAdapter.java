@@ -1,49 +1,44 @@
 package com.rassam.atiniapp;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.atiniapp.models.Item;
-import com.squareup.picasso.Picasso;
+import com.rassam.atiniapp.models.Item;
 
 import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     private List<Item> itemList;
-    private Context context;
+    private OnItemClickListener listener;
 
-    public HomeAdapter(List<Item> itemList, Context context) {
+    public interface OnItemClickListener {
+        void onItemClick(Item item);
+    }
+
+    public HomeAdapter(List<Item> itemList, OnItemClickListener listener) {
         this.itemList = itemList;
-        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.textViewTitle.setText(item.getTitle());
-        holder.textViewCategory.setText(item.getCategory());
-        holder.textViewDescription.setText(item.getDescription());
-
-        if (item.getPhotoUrls() != null && !item.getPhotoUrls().isEmpty()) {
-            Picasso.get().load(item.getPhotoUrls().get(0)).into(holder.imageViewPhoto);
-        } else {
-            holder.imageViewPhoto.setImageResource(R.drawable.placeholder_image);
-        }
+        holder.title.setText(item.getTitle());
+        holder.description.setText(item.getDescription());
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 
     @Override
@@ -52,15 +47,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewTitle, textViewCategory, textViewDescription;
-        public ImageView imageViewPhoto;
+
+        public TextView title;
+        public TextView description;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewCategory = itemView.findViewById(R.id.textViewCategory);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
-            imageViewPhoto = itemView.findViewById(R.id.imageViewPhoto);
+            title = itemView.findViewById(R.id.title);
+            description = itemView.findViewById(R.id.description);
         }
     }
 }

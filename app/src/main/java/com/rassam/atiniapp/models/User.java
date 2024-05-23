@@ -1,15 +1,24 @@
 package com.rassam.atiniapp.models;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
-@DynamoDBTable(tableName = "Users")
+import java.util.List;
+
+@DynamoDBDocument
 public class User {
-
     private String userId;
-    private String name;
-    private String email;
+    private String username;
+    private List<Item> favorites;
+
+    public User() {}
+
+    public User(String userId, String username, List<Item> favorites) {
+        this.userId = userId;
+        this.username = username;
+        this.favorites = favorites;
+    }
 
     @DynamoDBHashKey(attributeName = "UserId")
     public String getUserId() {
@@ -20,21 +29,21 @@ public class User {
         this.userId = userId;
     }
 
-    @DynamoDBAttribute(attributeName = "Name")
-    public String getName() {
-        return name;
+    @DynamoDBAttribute(attributeName = "Username")
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    @DynamoDBAttribute(attributeName = "Email")
-    public String getEmail() {
-        return email;
+    @DynamoDBAttribute(attributeName = "Favorites")
+    public List<Item> getFavorites() {
+        return favorites;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setFavorites(List<Item> favorites) {
+        this.favorites = favorites;
     }
 }
