@@ -1,7 +1,7 @@
 <resources>
-    <resources>
+
         <string name="app_name">Atini App</string>
         <string name="profile_picture">Profile Picture</string>
         <string name="upload">Upload</string>
-    </resources>
+
 </resources>
