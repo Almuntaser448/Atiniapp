@@ -32,14 +32,21 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     @Override
     public void onBindViewHolder(@NonNull FavoritesViewHolder holder, int position) {
         Item item = favoriteItems.get(position);
-        holder.textViewTitle.setText(item.getTitle());
-        holder.textViewCategory.setText(item.getCategory());
-        holder.textViewDescription.setText(item.getDescription());
+        if (item != null) {
+            holder.textViewTitle.setText(item.getTitle());
+            holder.textViewCategory.setText(item.getCategory());
+            holder.textViewDescription.setText(item.getDescription());
 
-        if (!item.getPhotoUrls().isEmpty()) {
-            Glide.with(holder.itemView.getContext()).load(item.getPhotoUrls().get(0)).into(holder.imageView);
+            List<String> photoUrls = item.getPhotoUrls();
+            if (photoUrls != null && !photoUrls.isEmpty()) {
+                Glide.with(holder.itemView.getContext()).load(photoUrls.get(0)).into(holder.imageView);
+            } else {
+                // Handle case where no photo URL is available
+                holder.imageView.setImageDrawable(null);
+            }
         }
     }
+
 
     @Override
     public int getItemCount() {

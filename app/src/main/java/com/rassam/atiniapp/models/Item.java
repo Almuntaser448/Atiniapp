@@ -1,11 +1,11 @@
 package com.rassam.atiniapp.models;
 
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
+//import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
+//import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 
 import java.util.List;
 
-@DynamoDBDocument
+//@DynamoDBDocument
 public class Item {
     private String itemId;
     private String title;
@@ -23,16 +23,34 @@ public class Item {
         this.photoUrls = photoUrls;
     }
 
-    @DynamoDBAttribute(attributeName = "ItemId")
+    // New constructor
+    public Item(String title, String category, String description) {
+        this.title = title;
+        this.category = category;
+        this.description = description;
+    }
+
+//    @DynamoDBAttribute(attributeName = "ItemId")
     public String getItemId() {
         return itemId;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Item other = (Item) obj;
+        return itemId.equals(other.itemId);
     }
 
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
-    @DynamoDBAttribute(attributeName = "Title")
+//    @DynamoDBAttribute(attributeName = "Title")
     public String getTitle() {
         return title;
     }
@@ -41,7 +59,7 @@ public class Item {
         this.title = title;
     }
 
-    @DynamoDBAttribute(attributeName = "Category")
+//    @DynamoDBAttribute(attributeName = "Category")
     public String getCategory() {
         return category;
     }
@@ -50,7 +68,7 @@ public class Item {
         this.category = category;
     }
 
-    @DynamoDBAttribute(attributeName = "Description")
+//    @DynamoDBAttribute(attributeName = "Description")
     public String getDescription() {
         return description;
     }
@@ -59,7 +77,7 @@ public class Item {
         this.description = description;
     }
 
-    @DynamoDBAttribute(attributeName = "PhotoUrls")
+//    @DynamoDBAttribute(attributeName = "PhotoUrls")
     public List<String> getPhotoUrls() {
         return photoUrls;
     }

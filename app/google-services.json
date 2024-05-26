@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "690501296008",
+    "project_id": "atiniapp",
+    "storage_bucket": "atiniapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690501296008:android:9f2cf937f66b97fcdce43d",
+        "android_client_info": {
+          "package_name": "com.rassam.atiniapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690501296008-aqrp7iifrglc1kt330estjdoqrr327qe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rassam.atiniapp",
+            "certificate_hash": "a81adf5ebe6f777d0b27df387f66af3ab66f796f"
+          }
+        },
+        {
+          "client_id": "690501296008-rue3dfsffcpf13lbbqcn6aahq3ina4st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASPcTlYVErkpISJEuU6IXTD33XWwwNIjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690501296008-rue3dfsffcpf13lbbqcn6aahq3ina4st.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

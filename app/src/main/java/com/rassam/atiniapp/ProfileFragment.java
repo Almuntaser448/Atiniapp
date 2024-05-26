@@ -17,7 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.rassam.atiniapp.models.Item;
+import com.rassam.atiniapp.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +39,19 @@ public class ProfileFragment extends Fragment {
     private LinearLayout linearLayoutImages;
     private List<Uri> imageUris;
 
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private User currentUser;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         editTextTitle = view.findViewById(R.id.editTextTitle);
         editTextCategory = view.findViewById(R.id.editTextCategory);
@@ -47,6 +64,8 @@ public class ProfileFragment extends Fragment {
 
         buttonChooseImages.setOnClickListener(v -> openImageChooser());
         buttonUpload.setOnClickListener(v -> uploadAd());
+
+        fetchCurrentUser();
 
         return view;
     }
@@ -83,7 +102,32 @@ public class ProfileFragment extends Fragment {
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
         imageView.setImageURI(imageUri);
-        linearLayoutImages.addView(imageView        );
+        linearLayoutImages.addView(imageView);
+    }
+
+    private void fetchCurrentUser() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        currentUser = document.toObject(User.class);
+                    } else {
+                        // Handle case where the user document doesn't exist
+                        currentUser = new User(userId, user.getDisplayName(), user.getEmail());
+                        db.collection("users").document(userId).set(currentUser);
+                    }
+                } else {
+                    // Handle errors
+                    Toast.makeText(getActivity(), "Failed to fetch user", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // Handle user not logged in
+            Toast.makeText(getActivity(), "User not logged in", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void uploadAd() {
@@ -99,22 +143,40 @@ public class ProfileFragment extends Fragment {
         List<String> photoUrls = new ArrayList<>();
         for (Uri uri : imageUris) {
             String key = "images/" + UUID.randomUUID().toString();
-            S3Helper.uploadFile(getActivity(), uri, "YOUR_S3_BUCKET_NAME", key);
-            photoUrls.add("https://YOUR_S3_BUCKET_NAME.s3.amazonaws.com/" + key);
-        }
+            StorageReference storageRef = storage.getReference().child(key);
+            UploadTask uploadTask = storageRef.putFile(uri);
 
+            uploadTask.addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                photoUrls.add(uri1.toString());
+                if (photoUrls.size() == imageUris.size()) {
+                    saveItemToFirestore(title, category, description, photoUrls);
+                }
+            })).addOnFailureListener(e -> {
+                Toast.makeText(getActivity(), "Failed to upload image: " + uri.toString(), Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    private void saveItemToFirestore(String title, String category, String description, List<String> photoUrls) {
         Item newItem = new Item(UUID.randomUUID().toString(), title, category, description, photoUrls);
-        // Add the item to the user's favorites or the general items list
-        // This example adds it to the user's favorites
-        User currentUser = DynamoDBHelper.getCurrentUser(); // You need to implement this method to get the current user
-        if (currentUser != null) {
-            currentUser.getFavorites().add(newItem);
-            DynamoDBHelper.saveUser(currentUser);
-        } else {
-            DynamoDBHelper.saveItem(newItem);
-        }
 
-        Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User currentUser = document.toObject(User.class);
+                        if (currentUser != null) {
+                            currentUser.getFavorites().add(newItem);
+                            db.collection("users").document(userId).set(currentUser)
+                                    .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error uploading ad", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                }
+            });
+        }
     }
 }
-
