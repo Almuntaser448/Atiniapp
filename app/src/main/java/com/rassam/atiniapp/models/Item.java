@@ -1,39 +1,46 @@
 package com.rassam.atiniapp.models;
 
-//import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
-//import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
-
 import java.util.List;
 
-//@DynamoDBDocument
 public class Item {
-    private String itemId;
-    private String title;
-    private String category;
-    private String description;
-    private List<String> photoUrls;
 
-    public Item() {}
+        private String id;
+        private String title;
+        private String category;
+        private String description;
+        private List<String> photoUrls;
+        private String status;
+        private int categoryNumber;
+        private List<String> keywords;
+        private String location;
+        private String donorId;
+        public Item() {}
 
-    public Item(String itemId, String title, String category, String description, List<String> photoUrls) {
-        this.itemId = itemId;
+        public Item(String id, String title, String category, String description, List<String> photoUrls, String status, int categoryNumber, List<String> keywords, String location) {
+            this.id = id;
+            this.title = title;
+            this.category = category;
+            this.description = description;
+            this.photoUrls = photoUrls;
+            this.status = status;
+            this.categoryNumber = categoryNumber;
+            this.keywords = keywords;
+            this.location = location;
+        }
+
+
+        // New constructor for initializing without itemId
+    public Item(String title, String category, String description, String donorId) {
         this.title = title;
         this.category = category;
         this.description = description;
-        this.photoUrls = photoUrls;
+        this.donorId = donorId;
     }
 
-    // New constructor
-    public Item(String title, String category, String description) {
-        this.title = title;
-        this.category = category;
-        this.description = description;
-    }
-
-//    @DynamoDBAttribute(attributeName = "ItemId")
     public String getItemId() {
-        return itemId;
+        return id;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -43,14 +50,13 @@ public class Item {
             return false;
         }
         Item other = (Item) obj;
-        return itemId.equals(other.itemId);
+        return id.equals(other.id);
     }
 
     public void setItemId(String itemId) {
-        this.itemId = itemId;
+        this.id = itemId;
     }
 
-//    @DynamoDBAttribute(attributeName = "Title")
     public String getTitle() {
         return title;
     }
@@ -59,7 +65,6 @@ public class Item {
         this.title = title;
     }
 
-//    @DynamoDBAttribute(attributeName = "Category")
     public String getCategory() {
         return category;
     }
@@ -68,7 +73,6 @@ public class Item {
         this.category = category;
     }
 
-//    @DynamoDBAttribute(attributeName = "Description")
     public String getDescription() {
         return description;
     }
@@ -77,12 +81,59 @@ public class Item {
         this.description = description;
     }
 
-//    @DynamoDBAttribute(attributeName = "PhotoUrls")
     public List<String> getPhotoUrls() {
         return photoUrls;
     }
 
     public void setPhotoUrls(List<String> photoUrls) {
         this.photoUrls = photoUrls;
+    }
+
+    public String getDonorId() {
+        return donorId;
+    }
+
+    public void setDonorId(String donorId) {
+        this.donorId = donorId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getCategoryNumber() {
+        return categoryNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCategoryNumber(int categoryNumber) {
+        this.categoryNumber = categoryNumber;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

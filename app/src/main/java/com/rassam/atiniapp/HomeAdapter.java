@@ -3,19 +3,18 @@ package com.rassam.atiniapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import com.rassam.atiniapp.models.Item;
-
 import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
-    private List<Item> itemList;
-    private OnItemClickListener listener;
+    private final List<Item> itemList;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(Item item);
@@ -29,16 +28,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_ad, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.title.setText(item.getTitle());
-        holder.description.setText(item.getDescription());
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
+        holder.bind(item, listener);
     }
 
     @Override
@@ -46,15 +44,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         return itemList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView title, description;
 
-        public TextView title;
-        public TextView description;
-
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
+            imageView = itemView.findViewById(R.id.imageView);
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
+        }
+
+        void bind(final Item item, final OnItemClickListener listener) {
+            title.setText(item.getTitle());
+            description.setText(item.getDescription());
+            Glide.with(itemView.getContext()).load(item.getImageUrl()).into(imageView);
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 }

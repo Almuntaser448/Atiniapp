@@ -1,50 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Title" />
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/profile_placeholder"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_image" />
 
-        <EditText
-            android:id="@+id/editTextCategory"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/profileNameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Category" />
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/profileRatingTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Description" />
-
-        <Button
-            android:id="@+id/buttonChooseImages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose Images" />
-
-        <LinearLayout
-            android:id="@+id/linearLayoutImages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:textSize="16sp"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <Button
-            android:id="@+id/buttonUpload"
+            android:id="@+id/myAdsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload"
-            android:layout_marginTop="16dp" />
+            android:text="@string/my_ads" />
+
+        <Button
+            android:id="@+id/favoritesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites" />
+
+        <Button
+            android:id="@+id/followedUsersButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/followed_users" />
+
+        <Button
+            android:id="@+id/myReviewsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/my_reviews" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout" />
     </LinearLayout>
-</RelativeLayout>
+</ScrollView>

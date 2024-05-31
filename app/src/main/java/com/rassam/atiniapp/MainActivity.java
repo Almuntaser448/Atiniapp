@@ -54,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new ProfileFragment();
                 } else if (itemId == R.id.nav_favorites) {
                     selectedFragment = new FavoritesFragment();
-                }else if(itemId == R.id.action_logout){
+                } else if (itemId == R.id.nav_main_page) {
+                    selectedFragment = new MainPageFragment();
+                } else if (itemId == R.id.action_logout) {
                     logout();
+                    return true;
                 }
                 if (selectedFragment != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
+
     }
 
     private void fetchCurrentUserAndFavorites(String userId) {

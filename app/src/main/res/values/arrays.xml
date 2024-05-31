@@ -1,0 +1,18 @@
+<resources>
+    <string-array name="status_options">
+        <item>New</item>
+        <item>Old</item>
+        <item>To be repaired</item>
+    </string-array>
+    <string-array name="category_options">
+        <item>Category 1</item>
+        <item>Category 2</item>
+        <item>Category 3</item>
+        <item>Category 4</item>
+        <item>Category 5</item>
+        <item>Category 6</item>
+        <item>Category 7</item>
+        <item>Category 8</item>
+        <item>Category 9</item>
+    </string-array>
+</resources>
