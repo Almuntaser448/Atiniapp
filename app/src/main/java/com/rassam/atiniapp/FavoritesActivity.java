@@ -32,7 +32,9 @@ public class FavoritesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteItems = new ArrayList<>();
-        adapter = new HomeAdapter(favoriteItems);
+        adapter = new HomeAdapter(favoriteItems, item -> {
+            // Handle item click if needed
+        });
         recyclerView.setAdapter(adapter);
 
         firebaseAuth = FirebaseAuth.getInstance();

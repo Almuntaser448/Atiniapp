@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
+    private FirebaseUser currentUser = mAuth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +33,15 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
         if (currentUser == null) {
             startActivity(new Intent(this, AuthenticationActivity.class));
             finish();
             return;
         }
+        String userId = currentUser.getUid();
 
-        fetchCurrentUserAndFavorites(currentUser.getUid());
+        fetchCurrentUserAndFavorites(userId);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -33,7 +33,11 @@ public class MyAdsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         itemList = new ArrayList<>();
-        adapter = new HomeAdapter(itemList);
+
+        // Pass an empty OnItemClickListener implementation if no action is needed on item click
+        adapter = new HomeAdapter(itemList, item -> {
+            // Handle item click if needed
+        });
         recyclerView.setAdapter(adapter);
 
         firebaseAuth = FirebaseAuth.getInstance();

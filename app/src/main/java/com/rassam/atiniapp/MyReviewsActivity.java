@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.rassam.atiniapp.models.Review;
+import com.rassam.atiniapp.models.Rating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class MyReviewsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MyReviewsAdapter adapter;
-    private List<Review> reviewList;
+    private List<Rating> reviewList;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
 
@@ -46,12 +46,12 @@ public class MyReviewsActivity extends AppCompatActivity {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            db.collection("reviews").whereEqualTo("userId", userId).get().addOnCompleteListener(task -> {
+            db.collection("ratings").whereEqualTo("ratingUserId", userId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     reviewList.clear();
                     for (DocumentSnapshot document : task.getResult()) {
-                        Review review = document.toObject(Review.class);
-                        reviewList.add(review);
+                        Rating rating = document.toObject(Rating.class);
+                        reviewList.add(rating);
                     }
                     adapter.notifyDataSetChanged();
                 } else {

@@ -14,6 +14,7 @@ public class Item {
         private List<String> keywords;
         private String location;
         private String donorId;
+
         public Item() {}
 
         public Item(String id, String title, String category, String description, List<String> photoUrls, String status, int categoryNumber, List<String> keywords, String location) {
@@ -135,5 +136,9 @@ public class Item {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+    public String getImageUrl(){
+            return this.photoUrls.get(0);
+
     }
 }

@@ -1,0 +1,8 @@
+<!-- item_followed_user.xml -->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textViewUsername"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="18sp"
+    android:padding="16dp"/>

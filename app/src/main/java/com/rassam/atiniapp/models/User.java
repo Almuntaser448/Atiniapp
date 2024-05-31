@@ -15,7 +15,9 @@ public class User {
     private String username;
     private String name;
     private String email;
+    private String ProfilePhotoUrl;
     private List<Item> favorites =new ArrayList<>();
+    private Rating rating;
 
     public User(String userId, String username) {
         this.userId = userId;
@@ -61,6 +63,29 @@ public class User {
         return favorites;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getProfilePhotoUrl() {
+        return ProfilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String ProfilePhotoUrl) {
+        this.ProfilePhotoUrl = ProfilePhotoUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
 
     public void setFavorites(List<Item> favorites) {
         this.favorites = favorites;

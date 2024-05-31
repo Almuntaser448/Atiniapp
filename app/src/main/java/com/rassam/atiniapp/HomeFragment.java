@@ -42,14 +42,16 @@ public class HomeFragment extends Fragment {
 
         editTextSearch = view.findViewById(R.id.editTextSearch);
         editTextLocation = view.findViewById(R.id.editTextLocation);
-        spinnerStatusFilter = view.findViewById(R.id.spinnerStatusFilter);
+        spinnerStatusFilter = view.findViewById(R.id.spinnerStatus);
         spinnerCategoryFilter = view.findViewById(R.id.spinnerCategoryFilter);
         buttonSearch = view.findViewById(R.id.buttonSearch);
 
         buttonSearch.setOnClickListener(v -> performSearch());
 
         itemList = new ArrayList<>();
-        adapter = new HomeAdapter(itemList);
+        adapter = new HomeAdapter(itemList, item -> {
+            // Handle item click if needed
+        });
         recyclerView.setAdapter(adapter);
 
         return view;

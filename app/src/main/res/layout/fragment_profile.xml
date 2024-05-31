@@ -14,7 +14,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/profile_placeholder"
+            android:src="@drawable/ic_user_placeholder"
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -36,6 +36,21 @@
             android:layout_marginBottom="16dp"
             android:textSize="16sp"
             android:textColor="?android:attr/textColorSecondary" />
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textViewAverageRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average Rating: "
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
 
         <Button
             android:id="@+id/myAdsButton"

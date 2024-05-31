@@ -24,8 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.rassam.atiniapp.models.Item;
 import com.rassam.atiniapp.models.User;
 
@@ -37,8 +35,8 @@ public class MainPageFragment extends Fragment {
 
     private static final int PICK_IMAGES_REQUEST = 1;
 
-    private EditText editTextTitle, editTextCategory, editTextDescription, editTextStatus;
-    private Spinner spinnerCategory;
+    private EditText editTextTitle, editTextDescription, editTextLocation;
+    private Spinner spinnerCategory, spinnerStatus;
     private LinearLayout linearLayoutImages;
     private List<Uri> imageUris;
 
@@ -57,10 +55,10 @@ public class MainPageFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
 
         editTextTitle = view.findViewById(R.id.editTextTitle);
-        editTextCategory = view.findViewById(R.id.editTextCategory);
         editTextDescription = view.findViewById(R.id.editTextDescription);
-        editTextStatus = view.findViewById(R.id.editTextStatus);
+        editTextLocation = view.findViewById(R.id.editTextLocation);
         spinnerCategory = view.findViewById(R.id.spinnerCategory);
+        spinnerStatus = view.findViewById(R.id.spinnerStatus);
         linearLayoutImages = view.findViewById(R.id.linearLayoutImages);
         Button buttonChooseImages = view.findViewById(R.id.buttonChooseImages);
         Button buttonUpload = view.findViewById(R.id.buttonUpload);
@@ -70,10 +68,15 @@ public class MainPageFragment extends Fragment {
         buttonChooseImages.setOnClickListener(v -> openImageChooser());
         buttonUpload.setOnClickListener(v -> uploadAd());
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.category_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(adapter);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
+
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.status_options, android.R.layout.simple_spinner_item);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(statusAdapter);
 
         fetchCurrentUser();
 
@@ -125,28 +128,26 @@ public class MainPageFragment extends Fragment {
                     if (document.exists()) {
                         currentUser = document.toObject(User.class);
                     } else {
-                        // Handle case where the user document doesn't exist
                         currentUser = new User(userId, user.getDisplayName(), user.getEmail());
                         db.collection("users").document(userId).set(currentUser);
                     }
                 } else {
-                    // Handle errors
                     Toast.makeText(getActivity(), "Failed to fetch user", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            // Handle user not logged in
             Toast.makeText(getActivity(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void uploadAd() private void uploadAd() {
+    private void uploadAd() {
         String title = editTextTitle.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
+        String location = editTextLocation.getText().toString().trim();
         String status = spinnerStatus.getSelectedItem().toString();
-        int categoryNumber = spinnerCategory.getSelectedItemPosition() + 1;
+        String category = spinnerCategory.getSelectedItem().toString();
 
-        if (title.isEmpty() || description.isEmpty() || imageUris.isEmpty()) {
+        if (title.isEmpty() || description.isEmpty() || imageUris.isEmpty() || location.isEmpty()) {
             Toast.makeText(getActivity(), "Please fill all fields and choose images", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -155,11 +156,12 @@ public class MainPageFragment extends Fragment {
         List<String> photoUrls = new ArrayList<>();
         for (Uri uri : imageUris) {
             String key = "images/" + UUID.randomUUID().toString();
-            // S3Helper.uploadFile(getActivity(), uri, "YOUR_S3_BUCKET_NAME", key);
-            photoUrls.add("https://YOUR_S3_BUCKET_NAME.s3.amazonaws.com/" + key);
+            // Replace with Firestore storage upload code
+            // storage.getReference().child(key).putFile(uri);
+            photoUrls.add(key);  // Replace with actual URL after upload
         }
 
-        Item newItem = new Item(UUID.randomUUID().toString(), title, null, description, photoUrls, status, categoryNumber, keywords);
+        Item newItem = new Item(UUID.randomUUID().toString(), title, category, description, photoUrls, status, 0, keywords, location);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
@@ -178,28 +180,4 @@ public class MainPageFragment extends Fragment {
         }
         return keywords;
     }
-
-    private void saveItemToFirestore(String title, String category, String description, List<String> photoUrls, String status, int categoryNumber) {
-        Item newItem = new Item(UUID.randomUUID().toString(), title, category, description, photoUrls, status, categoryNumber);
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            String userId = user.getUid();
-            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        User currentUser = document.toObject(User.class);
-                        if (currentUser != null) {
-                            currentUser.getFavorites().add(newItem);
-                            db.collection("users").document(userId).set(currentUser)
-                                    .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error uploading ad", Toast.LENGTH_SHORT).show());
-                        }
-                    }
-                }
-            });
-        }
-    }
-
 }
