@@ -2,9 +2,11 @@ package com.rassam.atiniapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,42 +20,56 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.rassam.atiniapp.models.Rating;
 import com.rassam.atiniapp.models.User;
 
-public class ProfileManagementFragment extends Fragment {
 
+public class ProfileManagementFragment extends Fragment {
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private TextView textViewAverageRating;
+    private TextView textViewUserName;
     private ImageView profileImageView;
     private TextView profileNameTextView, profileRatingTextView;
-    private TextView myAdsTextView, favoritesTextView, followedUsersTextView, myReviewsTextView, settingsTextView, logoutTextView;
+    private Button myAdsButton, favoritesButton, followedUsersButton, myReviewsButton, settingsButton, logoutButton;
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore db;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile_management, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        textViewAverageRating = view.findViewById(R.id.textViewAverageRating);
+        textViewUserName = view.findViewById(R.id.textViewUserName);
+
+        fetchCurrentUser();
+        loadAverageRating();
         profileImageView = view.findViewById(R.id.profileImageView);
         profileNameTextView = view.findViewById(R.id.profileNameTextView);
         profileRatingTextView = view.findViewById(R.id.profileRatingTextView);
-        myAdsTextView = view.findViewById(R.id.myAdsTextView);
-        favoritesTextView = view.findViewById(R.id.favoritesTextView);
-        followedUsersTextView = view.findViewById(R.id.followedUsersTextView);
-        myReviewsTextView = view.findViewById(R.id.myReviewsTextView);
-        settingsTextView = view.findViewById(R.id.settingsTextView);
-        logoutTextView = view.findViewById(R.id.logoutTextView);
+        myAdsButton = view.findViewById(R.id.myAdsButton);
+        favoritesButton = view.findViewById(R.id.favoritesButton);
+        followedUsersButton = view.findViewById(R.id.followedUsersButton);
+        myReviewsButton = view.findViewById(R.id.myReviewsButton);
+        settingsButton = view.findViewById(R.id.settingsButton);
+        logoutButton = view.findViewById(R.id.logoutButton);
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         loadUserProfile();
 
-        myAdsTextView.setOnClickListener(v -> startActivity(new Intent(getActivity(), MyAdsActivity.class)));
-        favoritesTextView.setOnClickListener(v -> startActivity(new Intent(getActivity(), FavoritesActivity.class)));
-        followedUsersTextView.setOnClickListener(v -> startActivity(new Intent(getActivity(), FollowedUsersActivity.class)));
-        myReviewsTextView.setOnClickListener(v -> startActivity(new Intent(getActivity(), MyReviewsActivity.class)));
-        settingsTextView.setOnClickListener(v -> startActivity(new Intent(getActivity(), SettingsActivity.class)));
-        logoutTextView.setOnClickListener(v -> logout());
+        myAdsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), MyAdsActivity.class)));
+        favoritesButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), FavoritesActivity.class)));
+        followedUsersButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), FollowedUsersActivity.class)));
+        myReviewsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), MyReviewsActivity.class)));
+        settingsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), SettingsActivity.class)));
+        logoutButton.setOnClickListener(v -> {
+            Log.d("ProfileManagementFragment", "Logout TextView clicked");
+            logout();});
 
         return view;
     }
@@ -67,7 +83,7 @@ public class ProfileManagementFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     User user = document.toObject(User.class);
                     if (user != null) {
-                        profileNameTextView.setText(user.getName());
+                        profileNameTextView.setText(user.getUsername());
                         profileRatingTextView.setText("Rating: " + user.getRating());
                         Glide.with(this).load(user.getProfilePhotoUrl()).into(profileImageView);
                     }
@@ -84,4 +100,48 @@ public class ProfileManagementFragment extends Fragment {
         startActivity(new Intent(getActivity(), AuthenticationActivity.class));
         getActivity().finish();
     }
+
+
+
+    private void fetchCurrentUser() {
+        if (mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    String userName = task.getResult().getString("name");
+                    textViewUserName.setText(userName != null ? userName : "Anonymous");
+                } else {
+                    Toast.makeText(getActivity(), "Failed to fetch user", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void loadAverageRating() {
+        if (mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            db.collection("ratings").whereEqualTo("ratedUserId", userId).get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        double totalRating = 0;
+                        int count = 0;
+
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            Rating rating = document.toObject(Rating.class);
+                            totalRating += rating.getRating();
+                            count++;
+                        }
+
+                        if (count > 0) {
+                            double averageRating = totalRating / count;
+                            textViewAverageRating.setText(String.format("Average Rating: %.1f", averageRating));
+                        } else {
+                            textViewAverageRating.setText("No ratings yet");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        textViewAverageRating.setText("Failed to load ratings");
+                    });
+        }
+    }
+
 }

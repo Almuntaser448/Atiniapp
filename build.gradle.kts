@@ -21,4 +21,7 @@ allprojects {
         mavenCentral()
     }
 }
+dependencies {
+
+}
 

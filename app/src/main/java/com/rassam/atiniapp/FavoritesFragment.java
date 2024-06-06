@@ -53,11 +53,25 @@ public class FavoritesFragment extends Fragment {
                                 // User document exists, retrieve favorites
                                 User user = document.toObject(User.class);
                                 if (user != null && user.getFavorites() != null) {
-                                    favoriteItems = user.getFavorites();
-                                    // Initialize the adapter with the new list of favorites
-                                    adapter = new FavoritesAdapter(favoriteItems);
-                                    // Set the adapter to the RecyclerView
-                                    recyclerView.setAdapter(adapter);
+                                    List<String> favoriteItemIds = user.getFavorites();
+                                    List<Item> fetchedItems = new ArrayList<>(); // To store fetched items
+
+                                    for (String itemId : favoriteItemIds) {
+                                        db.collection("items").document(itemId).get().addOnCompleteListener(itemTask -> {
+                                            if (itemTask.isSuccessful() && itemTask.getResult() != null) {
+                                                Item item = itemTask.getResult().toObject(Item.class);
+                                                fetchedItems.add(item);
+
+                                                // Update adapter when all items are fetched
+                                                if (fetchedItems.size() == favoriteItemIds.size()) {
+                                                    adapter = new FavoritesAdapter(fetchedItems);
+                                                    recyclerView.setAdapter(adapter);
+                                                }
+                                            } else {
+                                                // Handle error fetching item
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         } else {

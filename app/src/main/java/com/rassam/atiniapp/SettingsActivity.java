@@ -26,7 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextEmail, editTextPassword,editTextUsername;
     private ImageView imageViewProfile;
     private Button buttonUpdate, buttonChangePhoto;
     private FirebaseAuth firebaseAuth;
@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
+        editTextUsername= findViewById(R.id.editTextUsername);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         imageViewProfile = findViewById(R.id.imageViewProfile);
@@ -108,6 +108,18 @@ public class SettingsActivity extends AppCompatActivity {
                         Toast.makeText(SettingsActivity.this, "Failed to update password", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+            String newUsername = editTextUsername.getText().toString().trim();
+            if (!TextUtils.isEmpty(newUsername)) {
+                db.collection("users").document(currentUser.getUid())
+                        .update("username", newUsername) // Update the "name" field in Firestore
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SettingsActivity.this, "Username updated", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(SettingsActivity.this, "Failed to update username", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
 
             if (imageUri != null) {

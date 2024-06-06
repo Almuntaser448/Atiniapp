@@ -20,7 +20,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private HomeAdapter adapter;
-    private List<Item> favoriteItems;
+    private ArrayList<Item> favoriteItems;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
 
@@ -32,9 +32,7 @@ public class FavoritesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteItems = new ArrayList<>();
-        adapter = new HomeAdapter(favoriteItems, item -> {
-            // Handle item click if needed
-        });
+        adapter = new HomeAdapter(this, favoriteItems, this::toggleFavoriteStatus);
         recyclerView.setAdapter(adapter);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -63,6 +61,26 @@ public class FavoritesActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(FavoritesActivity.this, "Failed to load favorites", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void toggleFavoriteStatus(Item item) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    List<String> favoriteItemIds = (List<String>) task.getResult().get("favorites");
+                    if (favoriteItemIds != null) {
+                        if (item.isFavorite()) {
+                            favoriteItemIds.add(item.getId());
+                        } else {
+                            favoriteItemIds.remove(item.getId());
+                        }
+                        db.collection("users").document(userId).update("favorites", favoriteItemIds);
+                    }
                 }
             });
         }

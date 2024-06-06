@@ -13,10 +13,9 @@ import java.util.List;
 public class User {
     private String userId;
     private String username;
-    private String name;
     private String email;
     private String ProfilePhotoUrl;
-    private List<Item> favorites =new ArrayList<>();
+    private List<String> favorites =new ArrayList<>();
     private Rating rating;
 
     public User(String userId, String username) {
@@ -30,7 +29,7 @@ public class User {
     }
     public User() {
     }
-    public User(String userId, String username, List<Item> favorites) {
+    public User(String userId, String username, List<String> favorites) {
         this.userId = userId;
         this.username = username;
         this.favorites = favorites;
@@ -44,9 +43,6 @@ public class User {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
     public void setEmail(String email) {
         this.email = email;
     }
@@ -59,13 +55,10 @@ public class User {
         this.username = username;
     }
 
-    public List<Item> getFavorites() {
+    public List<String> getFavorites() {
         return favorites;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public String getProfilePhotoUrl() {
         return ProfilePhotoUrl;
@@ -87,7 +80,7 @@ public class User {
         this.rating = rating;
     }
 
-    public void setFavorites(List<Item> favorites) {
+    public void setFavorites(List<String> favorites) {
         this.favorites = favorites;
     }
 }

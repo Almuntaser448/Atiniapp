@@ -21,7 +21,7 @@ public class MyAdsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private HomeAdapter adapter;
-    private List<Item> itemList;
+    private ArrayList<Item> itemList; // Changed to ArrayList
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
 
@@ -34,8 +34,7 @@ public class MyAdsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         itemList = new ArrayList<>();
 
-        // Pass an empty OnItemClickListener implementation if no action is needed on item click
-        adapter = new HomeAdapter(itemList, item -> {
+        adapter = new HomeAdapter(this, itemList, item -> {
             // Handle item click if needed
         });
         recyclerView.setAdapter(adapter);

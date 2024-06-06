@@ -19,11 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.rassam.atiniapp.models.Item;
 import com.rassam.atiniapp.models.User;
 
@@ -57,8 +59,8 @@ public class MainPageFragment extends Fragment {
         editTextTitle = view.findViewById(R.id.editTextTitle);
         editTextDescription = view.findViewById(R.id.editTextDescription);
         editTextLocation = view.findViewById(R.id.editTextLocation);
-        spinnerCategory = view.findViewById(R.id.spinnerCategory);
-        spinnerStatus = view.findViewById(R.id.spinnerStatus);
+        spinnerCategory = view.findViewById(R.id.spinnerCategoryCreateAd);
+        spinnerStatus = view.findViewById(R.id.spinnerStatusCreateAd);
         linearLayoutImages = view.findViewById(R.id.linearLayoutImages);
         Button buttonChooseImages = view.findViewById(R.id.buttonChooseImages);
         Button buttonUpload = view.findViewById(R.id.buttonUpload);
@@ -69,12 +71,12 @@ public class MainPageFragment extends Fragment {
         buttonUpload.setOnClickListener(v -> uploadAd());
 
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.category_options, android.R.layout.simple_spinner_item);
+                R.array.category_options_create_ad, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(categoryAdapter);
 
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.status_options, android.R.layout.simple_spinner_item);
+                R.array.status_options_create_ad, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStatus.setAdapter(statusAdapter);
 
@@ -114,8 +116,12 @@ public class MainPageFragment extends Fragment {
     private void addImageView(Uri imageUri) {
         ImageView imageView = new ImageView(getActivity());
         imageView.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
-        imageView.setImageURI(imageUri);
         linearLayoutImages.addView(imageView);
+        Glide.with(this)
+                .load(imageUri)
+                .override(200, 200)  // Resize to 200x200 pixels
+                .centerCrop()
+                .into(imageView);
     }
 
     private void fetchCurrentUser() {
@@ -142,6 +148,7 @@ public class MainPageFragment extends Fragment {
 
     private void uploadAd() {
         String title = editTextTitle.getText().toString().trim();
+        String username = currentUser.getUsername();
         String description = editTextDescription.getText().toString().trim();
         String location = editTextLocation.getText().toString().trim();
         String status = spinnerStatus.getSelectedItem().toString();
@@ -154,29 +161,52 @@ public class MainPageFragment extends Fragment {
 
         List<String> keywords = generateKeywords(title + " " + description);
         List<String> photoUrls = new ArrayList<>();
-        for (Uri uri : imageUris) {
-            String key = "images/" + UUID.randomUUID().toString();
-            // Replace with Firestore storage upload code
-            // storage.getReference().child(key).putFile(uri);
-            photoUrls.add(key);  // Replace with actual URL after upload
-        }
 
-        Item newItem = new Item(UUID.randomUUID().toString(), title, category, description, photoUrls, status, 0, keywords, location);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("items").document(newItem.getId()).set(newItem)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error uploading ad", Toast.LENGTH_SHORT).show());
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+
+            for (Uri uri : imageUris) {
+                String key = "images/" + UUID.randomUUID().toString();
+                StorageReference imageRef = storageRef.child(key);
+
+                imageRef.putFile(uri)
+                        .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri1 -> {
+                                    photoUrls.add(uri1.toString());
+                                    if (photoUrls.size() == imageUris.size()) {
+                                        saveItemToFirestore(db, userId,username, title, description, category, status, keywords, location, photoUrls);
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to get download URL", Toast.LENGTH_SHORT).show();
+                                }))
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getActivity(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+                        });
+            }
         }
     }
 
+    private void saveItemToFirestore(FirebaseFirestore db, String userId,String username, String title, String description, String category, String status, List<String> keywords, String location, List<String> photoUrls) {
+        Item newItem = new Item(UUID.randomUUID().toString(), userId, username,title, description, location, category, status, photoUrls, false); // Updated constructor
+
+        db.collection("items").document(newItem.getId()).set(newItem)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error uploading ad", Toast.LENGTH_SHORT).show());
+    }
+
+
     private List<String> generateKeywords(String input) {
         List<String> keywords = new ArrayList<>();
-        String[] words = input.toLowerCase().split("\\s+");
+        String[] words = input.split("\\s+");
         for (String word : words) {
-            keywords.add(word);
+            if (!keywords.contains(word.toLowerCase())) {
+                keywords.add(word.toLowerCase());
+            }
         }
         return keywords;
     }

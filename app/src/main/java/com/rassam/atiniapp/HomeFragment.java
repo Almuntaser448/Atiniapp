@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,9 +50,8 @@ public class HomeFragment extends Fragment {
         buttonSearch.setOnClickListener(v -> performSearch());
 
         itemList = new ArrayList<>();
-        adapter = new HomeAdapter(itemList, item -> {
-            // Handle item click if needed
-        });
+
+        adapter = new HomeAdapter(getActivity(), itemList, item -> openItemDetails(item.getId()));
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -59,24 +59,25 @@ public class HomeFragment extends Fragment {
 
     private void performSearch() {
         String searchText = editTextSearch.getText().toString().trim();
-        String location = editTextLocation.getText().toString().trim();
-        String status = spinnerStatusFilter.getSelectedItem().toString();
-        int category = spinnerCategoryFilter.getSelectedItemPosition() + 1;
+        String selectedStatus = spinnerStatusFilter.getSelectedItem().toString();
+        String selectedCategory = spinnerCategoryFilter.getSelectedItem().toString();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Query query = db.collection("items");
 
+        // Handle search text
         if (!TextUtils.isEmpty(searchText)) {
             query = query.whereArrayContains("keywords", searchText.toLowerCase());
         }
-        if (!TextUtils.isEmpty(location)) {
-            query = query.whereEqualTo("location", location);
+
+        // Handle status filter
+        if (!selectedStatus.equals("All")) {
+            query = query.whereEqualTo("status", selectedStatus);
         }
-        if (!status.equals("All")) {
-            query = query.whereEqualTo("status", status);
-        }
-        if (category != 0) {
-            query = query.whereEqualTo("categoryNumber", category);
+
+        // Handle category filter
+        if (!selectedCategory.equals("Category 0")) {
+            query = query.whereEqualTo("categoryNumber", selectedCategory.substring(10)); // Extract number from "Category X"
         }
 
         query.get().addOnCompleteListener(task -> {
@@ -86,5 +87,13 @@ public class HomeFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void openItemDetails(String itemId) {
+        ItemDetailFragment fragment = ItemDetailFragment.newInstance(itemId);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

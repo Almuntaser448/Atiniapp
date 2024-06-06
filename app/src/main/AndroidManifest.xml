@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rassam.atiniapp">
+   >
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".AWSProvider"
         android:allowBackup="true"
@@ -20,6 +22,15 @@
         </activity>
         <activity android:name=".AuthenticationActivity"></activity>
         <activity android:name=".ChatActivity"/>
+        <activity android:name=".FavoritesActivity"/>
+        <activity android:name=".SettingsActivity"/>
+
+        <activity android:name=".MyAdsActivity"/>
+
+        <activity android:name=".FollowedUsersActivity"/>
+
+
+        <activity android:name=".MyReviewsActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_API_KEY" />

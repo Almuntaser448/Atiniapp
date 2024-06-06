@@ -1,18 +1,20 @@
-// Message.java
 package com.rassam.atiniapp.models;
+
+import java.util.Date;
 
 public class Message {
     private String senderId;
     private String receiverId;
-    private String messageText;
-    private long timestamp;
+    private String text;
+    private Date timestamp;
 
+    // Empty constructor required for Firestore
     public Message() {}
 
-    public Message(String senderId, String receiverId, String messageText, long timestamp) {
+    public Message(String senderId,String receiverId,String text, Date timestamp) {
         this.senderId = senderId;
         this.receiverId = receiverId;
-        this.messageText = messageText;
+        this.text = text;
         this.timestamp = timestamp;
     }
 
@@ -20,32 +22,31 @@ public class Message {
         return senderId;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
+    public String getText() {
+        return text;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 
     public String getReceiverId() {
         return receiverId;
     }
 
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
     public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 }
-

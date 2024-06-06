@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseUser currentUser = mAuth.getCurrentUser();
+    private ProfileManagementFragment ProfileManagementFragment;
+    private FirebaseUser currentUser ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
 
         if (currentUser == null) {
@@ -52,14 +54,14 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.nav_home) {
                     selectedFragment = new HomeFragment();
                 } else if (itemId == R.id.nav_profile) {
-                    selectedFragment = new ProfileFragment();
-                } else if (itemId == R.id.nav_favorites) {
-                    selectedFragment = new FavoritesFragment();
-                } else if (itemId == R.id.nav_main_page) {
+                    if (ProfileManagementFragment == null) {
+                        ProfileManagementFragment = new ProfileManagementFragment();
+                    }
+                    selectedFragment = ProfileManagementFragment;
+                }  else if (itemId == R.id.nav_main_page) {
                     selectedFragment = new MainPageFragment();
-                } else if (itemId == R.id.action_logout) {
-                    logout();
-                    return true;
+                } else if (itemId == R.id.nav_chats) {
+                    selectedFragment = new ChatsFragment();
                 }
                 if (selectedFragment != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 if (document != null && document.exists()) {
                     User currentUser = document.toObject(User.class);
                     if (currentUser != null) {
-                        List<Item> favoriteItems = currentUser.getFavorites();
+                        List<String> favoriteItems = currentUser.getFavorites();
                         // You can now use favoriteItems to populate your RecyclerView or any other UI component
                     }
                 } else {
@@ -92,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(MainActivity.this, AuthenticationActivity.class));
-        finish();
-    }
+
 
 }

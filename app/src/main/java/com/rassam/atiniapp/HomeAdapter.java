@@ -5,38 +5,51 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.rassam.atiniapp.models.Item;
+
 import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
-    private final List<Item> itemList;
-    private final OnItemClickListener listener;
+    private List<Item> itemList;
+    private FragmentActivity activity;
+    private OnItemClickListener clickListener;
 
     public interface OnItemClickListener {
         void onItemClick(Item item);
     }
 
-    public HomeAdapter(List<Item> itemList, OnItemClickListener listener) {
+    public HomeAdapter(FragmentActivity activity, List<Item> itemList, OnItemClickListener clickListener) {
+        this.activity = activity;
         this.itemList = itemList;
-        this.listener = listener;
+        this.clickListener = clickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_ad, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.bind(item, listener);
+
+        Glide.with(holder.itemView.getContext())
+                .load(item.getPhotoUrls().get(0)) // Assuming the first image is the primary image
+                .into(holder.imageView);
+
+        holder.textViewTitle.setText(item.getTitle());
+        holder.itemView.setOnClickListener(v -> {
+            clickListener.onItemClick(item);
+        });
     }
 
     @Override
@@ -46,20 +59,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title, description;
+        TextView textViewTitle;
 
         ViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
-            title = itemView.findViewById(R.id.title);
-            description = itemView.findViewById(R.id.description);
-        }
-
-        void bind(final Item item, final OnItemClickListener listener) {
-            title.setText(item.getTitle());
-            description.setText(item.getDescription());
-            Glide.with(itemView.getContext()).load(item.getImageUrl()).into(imageView);
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            imageView = itemView.findViewById(R.id.imageViewItem);
+            textViewTitle = itemView.findViewById(R.id.textViewItemTitle);
         }
     }
 }

@@ -3,59 +3,58 @@ package com.rassam.atiniapp.models;
 import java.util.List;
 
 public class Item {
+    private String id;
+    private String userId;
+    private String userName;
+    private String title;
+    private String description;
+    private String location;
+    private String category; // New field
+    private String status;   // New field
+    private List<String> photoUrls;
+    private boolean isFavorite;
 
-        private String id;
-        private String title;
-        private String category;
-        private String description;
-        private List<String> photoUrls;
-        private String status;
-        private int categoryNumber;
-        private List<String> keywords;
-        private String location;
-        private String donorId;
-
-        public Item() {}
-
-        public Item(String id, String title, String category, String description, List<String> photoUrls, String status, int categoryNumber, List<String> keywords, String location) {
-            this.id = id;
-            this.title = title;
-            this.category = category;
-            this.description = description;
-            this.photoUrls = photoUrls;
-            this.status = status;
-            this.categoryNumber = categoryNumber;
-            this.keywords = keywords;
-            this.location = location;
-        }
-
-
-        // New constructor for initializing without itemId
-    public Item(String title, String category, String description, String donorId) {
-        this.title = title;
-        this.category = category;
-        this.description = description;
-        this.donorId = donorId;
+    // Default constructor required for calls to DataSnapshot.getValue(Item.class)
+    public Item() {
     }
 
-    public String getItemId() {
+    // Constructor to initialize all fields
+    public Item(String id, String userId,String userName, String title, String description, String location, String category, String status, List<String> photoUrls, boolean isFavorite) {
+        this.id = id;
+        this.userId = userId;
+        this.userName = userName;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.category = category;
+        this.status = status;
+        this.photoUrls = photoUrls;
+        this.isFavorite = isFavorite;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    // Getters and setters for all fields
+    public String getId() {
         return id;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Item other = (Item) obj;
-        return id.equals(other.id);
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setItemId(String itemId) {
-        this.id = itemId;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -66,6 +65,22 @@ public class Item {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -74,12 +89,12 @@ public class Item {
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getStatus() {
+        return status;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<String> getPhotoUrls() {
@@ -90,55 +105,11 @@ public class Item {
         this.photoUrls = photoUrls;
     }
 
-    public String getDonorId() {
-        return donorId;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setDonorId(String donorId) {
-        this.donorId = donorId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int getCategoryNumber() {
-        return categoryNumber;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setCategoryNumber(int categoryNumber) {
-        this.categoryNumber = categoryNumber;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<String> getKeywords() {
-        return keywords;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setKeywords(List<String> keywords) {
-        this.keywords = keywords;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-    public String getImageUrl(){
-            return this.photoUrls.get(0);
-
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }
