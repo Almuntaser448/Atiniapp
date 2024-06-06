@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class ChatsFragment extends Fragment {
 
     private static final String TAG = "ChatsFragment";
-
+    private ChatListAdapter.OnUserClickListener onUserClickListener;
     private RecyclerView recyclerViewChats;
     private ChatListAdapter chatListAdapter;
     private List<User> chatUsersList;
@@ -46,7 +46,15 @@ public class ChatsFragment extends Fragment {
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         chatUsersList = new ArrayList<>();
-        chatListAdapter = new ChatListAdapter(chatUsersList, user -> openChatWithUser(user));
+        onUserClickListener = new ChatListAdapter.OnUserClickListener() { // Initialize here
+            @Override
+            public void onUserClick(String userId) {
+                Log.d(TAG, "Received userId in onUserClick: " + userId);
+                openChatWithUser(userId);
+            }
+        };
+        chatListAdapter = new ChatListAdapter(chatUsersList, onUserClickListener); // Pass to adapter
+        recyclerViewChats.setAdapter(chatListAdapter);
         recyclerViewChats.setAdapter(chatListAdapter);
 
         mAuth = FirebaseAuth.getInstance();
@@ -93,6 +101,8 @@ public class ChatsFragment extends Fragment {
             return;
         }
 
+        Log.d(TAG, "Starting to load user details for: " + userIds); // Log before fetching
+
         List<DocumentReference> userRefs = new ArrayList<>();
         for (String userId : userIds) {
             userRefs.add(db.collection("users").document(userId));
@@ -102,23 +112,53 @@ public class ChatsFragment extends Fragment {
                         .map(DocumentReference::get)
                         .collect(Collectors.toList()))
                 .addOnSuccessListener(list -> {
+                    Log.d(TAG, "Successfully fetched user documents."); // Log success
                     chatUsersList.clear();
                     for (Object obj : list) {
                         if (obj instanceof DocumentSnapshot) {
                             DocumentSnapshot document = (DocumentSnapshot) obj;
                             if (document.exists()) {
-                               User user = document.toObject(User.class);
+                                User user = document.toObject(User.class);
+                                String userId = document.getId(); // Get userId directly from document
+                                Log.d(TAG, "User object: " + user + ", userId: " + userId);
                                 chatUsersList.add(user);
                             }
                         }
                     }
                     chatListAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "Child count: " + recyclerViewChats.getChildCount()); // Check child count
+
+                    recyclerViewChats.postDelayed(() -> { // Add a delay
+                        for (int i = 0; i < recyclerViewChats.getChildCount(); i++) {
+                            View itemView = recyclerViewChats.getChildAt(i);
+                            int finalI = i;
+                            itemView.setOnClickListener(v -> {
+                                if (finalI < chatUsersList.size()) {
+                                    User user = chatUsersList.get(finalI);
+                                    if (user != null) {
+                                        String userId = userRefs.get(finalI).getId(); // Get document ID from userRefs
+                                        onUserClickListener.onUserClick(userId);
+                                        Log.d(TAG, "Item clicked at position: " + finalI + ", userId: " + userId);
+                                    } else {
+                                        Log.e(TAG, "User object is null at position: " + finalI);
+                                    }
+                                }
+                            });
+                            Log.d(TAG, "Setting click listener for item at position: " + finalI); // Log listener setup
+                        }
+                    }, 500); // 500ms delay
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "Error getting user documents: ", e));
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error getting user documents: ", e); // Log error with exception
+                });
     }
 
     private void openChatWithUser(String userId) {
-        Log.d(TAG, "Received User ID: " + userId);
+        if (userId == null) {
+            Log.e(TAG, "Error: Received null userId");
+            // Handle the error, e.g., show a message to the user
+            return;
+        }
         Intent intent = new Intent(getActivity(), ChatActivity.class);
         intent.putExtra("RECEIVER_ID", userId);
         intent.putExtra("CHAT_ID", createChatId(userId));

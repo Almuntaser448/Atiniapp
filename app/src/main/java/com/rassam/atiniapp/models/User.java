@@ -4,6 +4,7 @@ package com.rassam.atiniapp.models;
 //import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBDocument;
 //import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class User {
     public void setProfilePhotoUrl(String ProfilePhotoUrl) {
         this.ProfilePhotoUrl = ProfilePhotoUrl;
     }
+
 
     public String getEmail() {
         return email;

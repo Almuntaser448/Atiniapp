@@ -50,7 +50,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         }
 
         Glide.with(holder.itemView.getContext()).load(user.getProfilePhotoUrl()).into(holder.imageViewProfile);
-        holder.itemView.setOnClickListener(v -> onUserClickListener.onUserClick(user.getUserId()));
     }
     @Override
     public int getItemCount() {

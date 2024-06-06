@@ -20,7 +20,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     private OnItemClickListener clickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(User user);
+        void onItemClick(String userId);
     }
 
     public ChatsAdapter(List<User> chatUsersList, OnItemClickListener clickListener) {
@@ -34,17 +34,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_user, parent, false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = chatUsersList.get(position);
+ User user = chatUsersList.get(position);
 
         Glide.with(holder.itemView.getContext())
                 .load(user.getProfilePhotoUrl())
                 .into(holder.imageViewProfile);
 
         holder.textViewName.setText(user.getUsername());
-        holder.itemView.setOnClickListener(v -> clickListener.onItemClick(user));
+        holder.itemView.setOnClickListener(v -> clickListener.onItemClick(user.getUserId())); // Pass userId
     }
 
     @Override
