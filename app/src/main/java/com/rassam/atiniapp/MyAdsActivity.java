@@ -1,5 +1,6 @@
 package com.rassam.atiniapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -35,7 +36,11 @@ public class MyAdsActivity extends AppCompatActivity {
         itemList = new ArrayList<>();
 
         adapter = new HomeAdapter(this, itemList, item -> {
-            // Handle item click if needed
+            // Launch MyAdActionsActivity
+            Intent intent = new Intent(MyAdsActivity.this, MyAdActionsActivity.class);
+            intent.putExtra("itemId", item.getId());
+            // ... add other item details as needed
+            startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
 

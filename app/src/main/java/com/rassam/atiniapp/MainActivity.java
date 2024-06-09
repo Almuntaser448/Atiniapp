@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
-
+import com.rassam.atiniapp.AdUploadListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,7 +19,7 @@ import com.rassam.atiniapp.models.User;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdUploadListener {
 
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = ProfileManagementFragment;
                 }  else if (itemId == R.id.nav_main_page) {
                     selectedFragment = new MainPageFragment();
+                    ((MainPageFragment) selectedFragment).setAdUploadListener(MainActivity.this);
                 } else if (itemId == R.id.nav_chats) {
                     selectedFragment = new ChatsFragment();
                 }
@@ -94,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    public void onAdUploadSuccess() {
+        Fragment selectedFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit();
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+    }
 
 }

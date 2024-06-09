@@ -41,7 +41,7 @@ public class MainPageFragment extends Fragment {
     private Spinner spinnerCategory, spinnerStatus;
     private LinearLayout linearLayoutImages;
     private List<Uri> imageUris;
-
+    private AdUploadListener adUploadListener;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -123,7 +123,9 @@ public class MainPageFragment extends Fragment {
                 .centerCrop()
                 .into(imageView);
     }
-
+    public void setAdUploadListener(AdUploadListener listener) {
+        this.adUploadListener = listener;
+    }
     private void fetchCurrentUser() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -191,11 +193,20 @@ public class MainPageFragment extends Fragment {
         }
     }
 
-    private void saveItemToFirestore(FirebaseFirestore db, String userId,String username, String title, String description, String category, String status, List<String> keywords, String location, List<String> photoUrls) {
-        Item newItem = new Item(UUID.randomUUID().toString(), userId, username,title, description, location, category, status, photoUrls, false); // Updated constructor
+    private void saveItemToFirestore(FirebaseFirestore db, String userId, String username, String title,
+                                     String description, String category, String status,
+                                     List<String> keywords, String location, List<String> photoUrls) {
+        Item newItem = new Item(UUID.randomUUID().toString(), userId, username, title, description,
+                location, category, status, photoUrls, false);
 
         db.collection("items").document(newItem.getId()).set(newItem)
-                .addOnSuccessListener(aVoid -> Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show();
+                    // Navigate to the home page
+                    if (adUploadListener != null) {
+                        adUploadListener.onAdUploadSuccess();
+                    }
+                })
                 .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error uploading ad", Toast.LENGTH_SHORT).show());
     }
 

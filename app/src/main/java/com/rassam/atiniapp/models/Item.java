@@ -13,6 +13,7 @@ public class Item {
     private String status;   // New field
     private List<String> photoUrls;
     private boolean isFavorite;
+    private boolean reserved;
 
     // Default constructor required for calls to DataSnapshot.getValue(Item.class)
     public Item() {
@@ -30,6 +31,7 @@ public class Item {
         this.status = status;
         this.photoUrls = photoUrls;
         this.isFavorite = isFavorite;
+        this.reserved = false;
     }
 
     public String getUserName() {
@@ -107,6 +109,14 @@ public class Item {
 
     public boolean isFavorite() {
         return isFavorite;
+    }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        reserved = reserved;
     }
 
     public void setFavorite(boolean favorite) {
