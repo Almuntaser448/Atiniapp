@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="status_options">
         <item>All</item>
         <item>New</item>
@@ -6,7 +6,7 @@
         <item>To be repaired</item>
     </string-array>
     <string-array name="category_options">
-        <item>Category 0</item>
+        <item>All</item>
         <item>Category 1</item>
         <item>Category 2</item>
         <item>Category 3</item>
@@ -16,5 +16,18 @@
         <item>Category 7</item>
         <item>Category 8</item>
         <item>Category 9</item>
+    </string-array>
+    <string-array name="location_options" >
+        <item>All</item>
+        <item>Algiers</item>
+        <item>Oran</item>
+        <item>Constantine</item>
+        <item>Annaba</item>
+        <item>Batna</item>
+        <item>Blida</item>
+        <item>Sétif</item>
+        <item>Tlemcen</item>
+        <item>Béjaïa</item>
+        <item>Sidi Bel Abbès</item>
     </string-array>
 </resources>

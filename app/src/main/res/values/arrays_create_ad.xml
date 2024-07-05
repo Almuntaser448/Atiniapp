@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="status_options_create_ad">
         <item>New</item>
         <item>Old</item>
@@ -14,5 +14,17 @@
         <item>Category 7</item>
         <item>Category 8</item>
         <item>Category 9</item>
+    </string-array>
+    <string-array name="location_options_create_ad" >
+        <item>Algiers</item>
+        <item>Oran</item>
+        <item>Constantine</item>
+        <item>Annaba</item>
+        <item>Batna</item>
+        <item>Blida</item>
+        <item>Sétif</item>
+        <item>Tlemcen</item>
+        <item>Béjaïa</item>
+        <item>Sidi Bel Abbès</item>
     </string-array>
 </resources>

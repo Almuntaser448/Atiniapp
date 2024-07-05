@@ -37,8 +37,8 @@ public class MainPageFragment extends Fragment {
 
     private static final int PICK_IMAGES_REQUEST = 1;
 
-    private EditText editTextTitle, editTextDescription, editTextLocation;
-    private Spinner spinnerCategory, spinnerStatus;
+    private EditText editTextTitle, editTextDescription;
+    private Spinner spinnerCategory, spinnerStatus, editTextLocation;
     private LinearLayout linearLayoutImages;
     private List<Uri> imageUris;
     private AdUploadListener adUploadListener;
@@ -58,7 +58,7 @@ public class MainPageFragment extends Fragment {
 
         editTextTitle = view.findViewById(R.id.editTextTitle);
         editTextDescription = view.findViewById(R.id.editTextDescription);
-        editTextLocation = view.findViewById(R.id.editTextLocation);
+        editTextLocation = view.findViewById(R.id.spinneLocationCreateAd);
         spinnerCategory = view.findViewById(R.id.spinnerCategoryCreateAd);
         spinnerStatus = view.findViewById(R.id.spinnerStatusCreateAd);
         linearLayoutImages = view.findViewById(R.id.linearLayoutImages);
@@ -74,7 +74,10 @@ public class MainPageFragment extends Fragment {
                 R.array.category_options_create_ad, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(categoryAdapter);
-
+        ArrayAdapter<CharSequence>locationAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.location_options_create_ad, android.R.layout.simple_spinner_item);
+        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editTextLocation.setAdapter(locationAdapter);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.status_options_create_ad, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -152,7 +155,7 @@ public class MainPageFragment extends Fragment {
         String title = editTextTitle.getText().toString().trim();
         String username = currentUser.getUsername();
         String description = editTextDescription.getText().toString().trim();
-        String location = editTextLocation.getText().toString().trim();
+        String location = editTextLocation.getSelectedItem().toString();
         String status = spinnerStatus.getSelectedItem().toString();
         String category = spinnerCategory.getSelectedItem().toString();
 
@@ -172,7 +175,7 @@ public class MainPageFragment extends Fragment {
             StorageReference storageRef = storage.getReference();
 
             for (Uri uri : imageUris) {
-                String key = "images/" + UUID.randomUUID().toString();
+                String key = "user/" + userId + "/images/" + UUID.randomUUID().toString();
                 StorageReference imageRef = storageRef.child(key);
 
                 imageRef.putFile(uri)
@@ -197,8 +200,7 @@ public class MainPageFragment extends Fragment {
                                      String description, String category, String status,
                                      List<String> keywords, String location, List<String> photoUrls) {
         Item newItem = new Item(UUID.randomUUID().toString(), userId, username, title, description,
-                location, category, status, photoUrls, false);
-
+                location, category, status, photoUrls, false,keywords);
         db.collection("items").document(newItem.getId()).set(newItem)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getActivity(), "Ad uploaded successfully", Toast.LENGTH_SHORT).show();
@@ -215,8 +217,9 @@ public class MainPageFragment extends Fragment {
         List<String> keywords = new ArrayList<>();
         String[] words = input.split("\\s+");
         for (String word : words) {
-            if (!keywords.contains(word.toLowerCase())) {
-                keywords.add(word.toLowerCase());
+            String lowercaseWord = word.toLowerCase(); // Convert to lowercase here
+            if (!keywords.contains(lowercaseWord)) {
+                keywords.add(lowercaseWord);
             }
         }
         return keywords;

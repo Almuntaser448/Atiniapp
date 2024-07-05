@@ -1,56 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/background">
+    android:background="@drawable/fond_application">
 
     <EditText
         android:id="@+id/editTextTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title" />
-
-    <EditText
-        android:id="@+id/editTextLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Location" />
+        android:layout_width="196dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="15dp"
+        android:hint="Title"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDescription"
+        app:layout_constraintStart_toStartOf="@+id/editTextDescription"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description" />
+        android:layout_width="321dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="27dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerStatusCreateAd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
 
     <Spinner
         android:id="@+id/spinnerStatusCreateAd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/status_options_create_ad" />
+        android:layout_width="115dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="500dp"
+        android:entries="@array/status_options_create_ad"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinnerCategoryCreateAd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/category_options_create_ad"/>
-
-    <Button
-        android:id="@+id/buttonChooseImages"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Images" />
+        android:layout_width="131dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="264dp"
+        android:layout_marginBottom="498dp"
+        android:entries="@array/category_options_create_ad"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayoutImages"
-        android:layout_width="match_parent"
+        android:layout_width="398dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" />
+        android:layout_marginTop="317dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="414dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonChooseImages"
+        android:layout_width="168dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="639dp"
+        android:layout_marginEnd="227dp"
+        android:layout_marginBottom="39dp"
+        android:background="@drawable/roundedbutton"
+        android:backgroundTint="#ed0017"
+        android:text="Choose Images"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload Ad" />
-</LinearLayout>
+        android:layout_width="170dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="207dp"
+        android:layout_marginTop="643dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="39dp"
+        android:background="@drawable/roundedbutton"
+        android:backgroundTint="#ed0017"
+        android:text="Posté !"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinneLocationCreateAd"
+        android:entries="@array/location_options_create_ad"
+        android:layout_width="113dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="295dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="501dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

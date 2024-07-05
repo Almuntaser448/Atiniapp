@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements AdUploadListener 
 
 
         if (currentUser == null) {
-            startActivity(new Intent(this, AuthenticationActivity.class));
+            startActivity(new Intent(this, AuthActivity.class));
             finish();
             return;
         }

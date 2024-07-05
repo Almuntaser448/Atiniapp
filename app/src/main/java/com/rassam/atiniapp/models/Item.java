@@ -7,20 +7,20 @@ public class Item {
     private String userId;
     private String userName;
     private String title;
+    private  List<String> keywords;
     private String description;
     private String location;
     private String category; // New field
     private String status;   // New field
     private List<String> photoUrls;
     private boolean isFavorite;
-    private boolean reserved;
-
+    private Reservation reservation;
     // Default constructor required for calls to DataSnapshot.getValue(Item.class)
     public Item() {
     }
 
     // Constructor to initialize all fields
-    public Item(String id, String userId,String userName, String title, String description, String location, String category, String status, List<String> photoUrls, boolean isFavorite) {
+    public Item(String id, String userId,String userName, String title, String description, String location, String category, String status, List<String> photoUrls, boolean isFavorite,List<String> keywords) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
@@ -31,7 +31,8 @@ public class Item {
         this.status = status;
         this.photoUrls = photoUrls;
         this.isFavorite = isFavorite;
-        this.reserved = false;
+        this.keywords=keywords;
+        this.reservation=new Reservation(false,userId,null,null);
     }
 
     public String getUserName() {
@@ -103,6 +104,10 @@ public class Item {
         return photoUrls;
     }
 
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
     public void setPhotoUrls(List<String> photoUrls) {
         this.photoUrls = photoUrls;
     }
@@ -111,15 +116,9 @@ public class Item {
         return isFavorite;
     }
 
-    public boolean isReserved() {
-        return reserved;
-    }
-
-    public void setReserved(boolean reserved) {
-        reserved = reserved;
-    }
-
+    public Reservation getReservation() { return this.reservation; }
+    public void setReservation(Reservation reservation) { this.reservation = reservation; }
     public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
+        this.isFavorite = favorite;
     }
 }

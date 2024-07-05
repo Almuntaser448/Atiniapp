@@ -5,96 +5,117 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@drawable/fond_application"
+    tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="378dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="9dp"
-        android:hint="Search"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerStatus"
+    <ImageView
+        android:id="@+id/notifpic"
+        android:layout_width="51dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_notification" />
+
+    <ImageView
+        android:id="@+id/watermilonpic"
+        android:layout_width="40dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@id/notifpic"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pastek_icon" />
+
+
+    <Spinner
+        android:id="@+id/spinnerCategoryFilter"
+        android:layout_width="105dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="75dp"
+        android:entries="@array/category_options"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinnerCategoryFilter"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="37dp"
-        android:layout_marginEnd="68dp"
-        android:entries="@array/category_options"
-        app:layout_constraintBottom_toBottomOf="@+id/spinnerStatus"
-        app:layout_constraintEnd_toStartOf="@+id/spinnerStatus"
+        android:id="@+id/spinnerLocation"
+        android:layout_width="92dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="299dp"
+        android:layout_marginTop="82dp"
+        android:entries="@array/location_options"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spinnerStatus" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinnerStatus"
-        android:layout_width="112dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginBottom="7dp"
+        android:layout_width="103dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="154dp"
+        android:layout_marginBottom="624dp"
         android:entries="@array/status_options"
-        app:layout_constraintBottom_toTopOf="@+id/editTextLocation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/spinnerCategoryFilter"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="382dp"
-        android:layout_height="267dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="388dp"
+        android:layout_height="480dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="203dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSearch" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonSearch"
-        android:layout_width="125dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginBottom="48dp"
-        android:text="Search"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintStart_toStartOf="@+id/editTextLocation"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLocation" />
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="234dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="11dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextLocation"
-        android:layout_width="365dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:hint="Location"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSearch"
+    <TextView
+        android:id="@+id/textViewWatermilon"
+        android:layout_width="21dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="288dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="689dp"
+        android:background="@color/design_default_color_error"
+        android:elevation="5dp"
+        android:textColor="@color/design_default_color_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerStatus" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+    <TextView
+        android:id="@+id/textViewNotif"
+        android:layout_width="18dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="357dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="698dp"
+        android:background="@color/design_default_color_error"
+        android:elevation="5dp"
+        android:textColor="@color/design_default_color_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

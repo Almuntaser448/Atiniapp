@@ -42,11 +42,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = itemList.get(position);
 
-        Glide.with(holder.itemView.getContext())
-                .load(item.getPhotoUrls().get(0)) // Assuming the first image is the primary image
-                .into(holder.imageView);
+        // Check if the item has image URLs before loading
+        if (item.getPhotoUrls() !=null && !item.getPhotoUrls().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(item.getPhotoUrls().get(0))
+                    .into(holder.imageView);
+        } else {
+            // Handle the case where there are no image URLs (e.g., set a placeholder image)
+            Glide.with(holder.itemView.getContext())
+                    .load(R.drawable.placeholder_image) // Replace with your placeholder image resource
+                    .into(holder.imageView);
+        }
 
         holder.textViewTitle.setText(item.getTitle());
+        holder.textViewDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> {
             clickListener.onItemClick(item);
         });
@@ -59,12 +68,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView textViewTitle;
+        TextView textViewTitle,textViewDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageViewItem);
-            textViewTitle = itemView.findViewById(R.id.textViewItemTitle);
+            imageView = itemView.findViewById(R.id.itemImage);
+            textViewTitle = itemView.findViewById(R.id.itemTitle);
+            textViewDescription=itemView.findViewById(R.id.textViewDescription);
         }
     }
 }

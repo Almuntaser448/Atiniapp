@@ -65,11 +65,6 @@
             android:layout_height="wrap_content"
             android:text="@string/favorites" />
 
-        <Button
-            android:id="@+id/followedUsersButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/followed_users" />
 
         <Button
             android:id="@+id/myReviewsButton"

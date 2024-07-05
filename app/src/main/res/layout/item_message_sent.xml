@@ -6,9 +6,10 @@
 
     <TextView
         android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="129dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="9dp"
         android:background="@drawable/bg_message_sent"
         android:padding="12dp"
         android:text="Message Text"

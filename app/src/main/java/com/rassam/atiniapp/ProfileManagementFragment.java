@@ -32,7 +32,7 @@ public class ProfileManagementFragment extends Fragment {
     private TextView textViewUserName;
     private ImageView profileImageView;
     private TextView profileNameTextView, profileRatingTextView;
-    private Button myAdsButton, favoritesButton, followedUsersButton, myReviewsButton, settingsButton, logoutButton;
+    private Button myAdsButton, favoritesButton, myReviewsButton, settingsButton, logoutButton;
     private FirebaseAuth firebaseAuth;
 
     @Nullable
@@ -52,7 +52,6 @@ public class ProfileManagementFragment extends Fragment {
         profileRatingTextView = view.findViewById(R.id.profileRatingTextView);
         myAdsButton = view.findViewById(R.id.myAdsButton);
         favoritesButton = view.findViewById(R.id.favoritesButton);
-        followedUsersButton = view.findViewById(R.id.followedUsersButton);
         myReviewsButton = view.findViewById(R.id.myReviewsButton);
         settingsButton = view.findViewById(R.id.settingsButton);
         logoutButton = view.findViewById(R.id.logoutButton);
@@ -64,7 +63,6 @@ public class ProfileManagementFragment extends Fragment {
 
         myAdsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), MyAdsActivity.class)));
         favoritesButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), FavoritesActivity.class)));
-        followedUsersButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), FollowedUsersActivity.class)));
         myReviewsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), MyReviewsActivity.class)));
         settingsButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), SettingsActivity.class)));
         logoutButton.setOnClickListener(v -> {
@@ -97,7 +95,7 @@ public class ProfileManagementFragment extends Fragment {
     private void logout() {
         FirebaseAuth.getInstance().signOut();
 
-        startActivity(new Intent(getActivity(), AuthenticationActivity.class));
+        startActivity(new Intent(getActivity(), AuthActivity.class));
         getActivity().finish();
     }
 
